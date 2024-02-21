@@ -13,8 +13,8 @@ import { defineProps } from "vue"
 
 const props = defineProps({
   transactions: {
-    required: true,
     type: Array,
+    required: true,
   },
 })
 </script>
