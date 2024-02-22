@@ -4,7 +4,7 @@
     <Balance :total="total" />
     <IncomeExpenses :income="+income" :expenses="+expenses" />
     <TransactionList :transactions="transactions" />
-    <AddTransaction />
+    <AddTransaction @transaction-submitted="handleTransactionSubmitted" /><!--  here goes the name of the event you defined inside -->
   </div>
 </template>
 
@@ -26,9 +26,7 @@ const transactions = ref([
 ])
 
 // get total amount of expenses
-const total = computed(() => {
-  return transactions.value.reduce((acc, transaction) => acc + transaction.amount, 0)
-})
+const total = computed(() => transactions.value.reduce((acc, transaction) => acc + transaction.amount, 0))
 
 // get income
 const income = computed(() => {
@@ -44,4 +42,18 @@ const expenses = computed(() => {
     .reduce((acc, transaction) => acc + transaction.amount, 0)
     .toFixed(2)
 })
+
+//add transaction
+const handleTransactionSubmitted = (transactionData) => {
+  console.log(transactionData)
+  transactions.value.push({
+    id: generateUniqueId(),
+    text: transactionData.text,
+    amount: transactionData.amount,
+  })
+  console.log(generateUniqueId())
+}
+
+//generate unique id
+const generateUniqueId = () => Math.floor(Math.random() * 1000)
 </script>
