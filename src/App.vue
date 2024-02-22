@@ -16,17 +16,17 @@ import TransactionList from "./components/TransactionList.vue"
 import AddTransaction from "./components/AddTransaction.vue"
 
 import { useToast } from "vue-toastification"
-import { ref, computed } from "vue"
+import { ref, computed, onMounted } from "vue"
 
 const toast = useToast()
+onMounted(() => {
+  //this is something like useEffect
+  let savedTransactions = JSON.parse(localStorage.getItem("transactions"))
 
-const transactions = ref([
-  { id: 1, text: "Flowers", amount: -19.99 },
-  { id: 2, text: "Salary", amount: 9.1 },
-  { id: 3, text: "Book", amount: -19 },
-  { id: 4, text: "Camera", amount: 99 },
-  { id: 5, text: "Sofa", amount: 150 },
-])
+  if (savedTransactions) transactions.value = savedTransactions
+})
+
+const transactions = ref([])
 
 // get total amount of expenses
 const total = computed(() => transactions.value.reduce((acc, transaction) => acc + transaction.amount, 0))
@@ -54,6 +54,7 @@ const handleTransactionSubmit = (transactionData) => {
     text: transactionData.text,
     amount: transactionData.amount,
   })
+  saveTransactionsToLocalStorage()
   toast.success("Transaction added")
 }
 
@@ -64,7 +65,13 @@ const generateUniqueId = () => Math.floor(Math.random() * 1000)
 const handleTransactionDelete = (id) => {
   console.log("id to delete: ", id)
   transactions.value = transactions.value.filter((transaction) => transaction.id !== id)
-
+  saveTransactionsToLocalStorage()
   toast.success("Transaction deleted")
+}
+
+//save to local storage
+const saveTransactionsToLocalStorage = () => {
+  //this part i do not understand at all
+  localStorage.setItem("transactions", JSON.stringify(transactions.value))
 }
 </script>
