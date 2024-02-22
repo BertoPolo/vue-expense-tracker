@@ -3,8 +3,8 @@
   <div class="container">
     <Balance :total="total" />
     <IncomeExpenses :income="+income" :expenses="+expenses" />
-    <TransactionList :transactions="transactions" />
-    <AddTransaction @transaction-submitted="handleTransactionSubmitted" /><!--  here goes the name of the event you defined inside -->
+    <TransactionList :transactions="transactions" @transactionDeleted="handleTransactionDelete" />
+    <AddTransaction @transactionSubmitted="handleTransactionSubmit" /><!--  here goes the name of the event you defined inside -->
   </div>
 </template>
 
@@ -15,7 +15,10 @@ import IncomeExpenses from "./components/IncomeExpenses.vue"
 import TransactionList from "./components/TransactionList.vue"
 import AddTransaction from "./components/AddTransaction.vue"
 
+import { useToast } from "vue-toastification"
 import { ref, computed } from "vue"
+
+const toast = useToast()
 
 const transactions = ref([
   { id: 1, text: "Flowers", amount: -19.99 },
@@ -44,16 +47,24 @@ const expenses = computed(() => {
 })
 
 //add transaction
-const handleTransactionSubmitted = (transactionData) => {
+const handleTransactionSubmit = (transactionData) => {
   console.log(transactionData)
   transactions.value.push({
     id: generateUniqueId(),
     text: transactionData.text,
     amount: transactionData.amount,
   })
-  console.log(generateUniqueId())
+  toast.success("Transaction added")
 }
 
 //generate unique id
 const generateUniqueId = () => Math.floor(Math.random() * 1000)
+
+//delete transaction
+const handleTransactionDelete = (id) => {
+  console.log("id to delete: ", id)
+  transactions.value = transactions.value.filter((transaction) => transaction.id !== id)
+
+  toast.success("Transaction deleted")
+}
 </script>

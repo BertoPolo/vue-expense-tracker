@@ -21,7 +21,7 @@ const text = ref("")
 const amount = ref("")
 const toast = useToast()
 
-const emit = defineEmits(["transactionSubmitted"]) // you can call it whatever. its the name of your event
+const emit = defineEmits(["transactionSubmitted"]) // you can call it whatever. it's the name of your event
 
 const onSubmit = () => {
   if (!text.value || !amount.value) {
@@ -34,6 +34,8 @@ const onSubmit = () => {
     amount: parseFloat(amount.value),
   }
   emit("transactionSubmitted", transactionData)
+
+  //reset input fields
   text.value = ""
   amount.value = ""
 }
